@@ -9,17 +9,20 @@ app.use(bodyParser.json());
 
 app.use(express.static('public'));
 
-// COLE SUA CONNECTION STRING DO SUPABASE AQUI EMBAIXO
-const connectionString = 'postgres://postgres:[SUA-SENHA]@db.iattoghccbgqgipnuulb.supabase.co:5432/postgres';
+// -----------------------------------------------------------------------
+// COLE O LINK NOVO DO "TRANSACTION POOLER" (PORTA 6543) AQUI EMBAIXO
+// Exemplo: postgres://postgres.abcde:senha@aws-0-sa-east-1.pooler.supabase.com:6543/postgres
+// -----------------------------------------------------------------------
+const connectionString = 'DATABASE_URL=postgresql://postgres:[Dkzin@#2002!]@db.iattoghccbgqgipnuulb.supabase.co:5432/postgres';
 
 const pool = new Pool({
   connectionString: connectionString,
   ssl: {
-    rejectUnauthorized: false // Importante para conectar no Supabase via SSL
+    rejectUnauthorized: false // Obrigatório para o Supabase
   }
 });
 
-// 1. Rota de Cadastro (COM USERNAME)
+// 1. Rota de Cadastro
 app.post('/register', async (req, res) => {
   const { username, password } = req.body;
   
@@ -39,7 +42,7 @@ app.post('/register', async (req, res) => {
   }
 });
 
-// 2. Rota de Login (COM USERNAME)
+// 2. Rota de Login
 app.post('/login', async (req, res) => {
   const { username, password } = req.body;
   try {
