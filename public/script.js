@@ -1,4 +1,6 @@
-const API_URL = '';; // Mude para URL do Render quando subir
+// Deixe vazio para usar a mesma URL do site (importante para o Render)
+const API_URL = ''; 
+
 let currentUser = null;
 let myChart = null;
 
@@ -16,13 +18,15 @@ function toggleAuth() {
 }
 
 async function login() {
-    const email = document.getElementById('login-email').value;
+    // MODIFICADO: Agora busca pelo ID 'login-user'
+    const username = document.getElementById('login-user').value;
     const password = document.getElementById('login-pass').value;
 
     const res = await fetch(`${API_URL}/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
+        // MODIFICADO: Envia 'username' no lugar de 'email'
+        body: JSON.stringify({ username, password })
     });
 
     if (res.ok) {
@@ -35,12 +39,13 @@ async function login() {
         document.getElementById('current-month').value = now.toISOString().slice(0, 7);
         loadDashboard();
     } else {
-        alert('Login falhou!');
+        alert('Usuário ou senha incorretos!');
     }
 }
 
 async function register() {
-    const email = document.getElementById('reg-email').value;
+    // MODIFICADO: Agora busca pelo ID 'reg-user'
+    const username = document.getElementById('reg-user').value;
     const pass = document.getElementById('reg-pass').value;
     const confirm = document.getElementById('reg-confirm').value;
 
@@ -49,14 +54,15 @@ async function register() {
     const res = await fetch(`${API_URL}/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password: pass })
+        // MODIFICADO: Envia 'username' no lugar de 'email'
+        body: JSON.stringify({ username, password: pass })
     });
 
     if (res.ok) {
-        alert('Cadastrado! Faça login.');
+        alert('Cadastrado! Faça login com seu novo usuário.');
         toggleAuth();
     } else {
-        alert('Erro ao cadastrar.');
+        alert('Erro ao cadastrar. Esse usuário já existe?');
     }
 }
 
