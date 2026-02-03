@@ -9,7 +9,7 @@ app.use(bodyParser.json());
 
 app.use(express.static('public'));
 
-// Pega a variável do Render OU usa a string local se estiver testando no PC
+// Pega a variável do Render OU usa a string local
 const connectionString = process.env.DATABASE_URL;
 
 const pool = new Pool({
@@ -19,9 +19,14 @@ const pool = new Pool({
   }
 });
 
-// 1. Rota de Cadastro (MODIFICADA para username)
+// 1. Rota de Cadastro (AGORA COM USERNAME)
 app.post('/register', async (req, res) => {
-  const { username, password } = req.body; // Recebe username
+  const { username, password } = req.body;
+  
+  if (!username || !password) {
+      return res.status(400).json({ error: 'Preencha todos os campos' });
+  }
+
   try {
     const newUser = await pool.query(
       'INSERT INTO users (username, password) VALUES ($1, $2) RETURNING id, username',
@@ -34,11 +39,10 @@ app.post('/register', async (req, res) => {
   }
 });
 
-// 2. Rota de Login (MODIFICADA para username)
+// 2. Rota de Login (AGORA COM USERNAME)
 app.post('/login', async (req, res) => {
-  const { username, password } = req.body; // Recebe username
+  const { username, password } = req.body;
   try {
-    // Busca por username ao invés de email
     const user = await pool.query('SELECT * FROM users WHERE username = $1', [username]);
     
     if (user.rows.length > 0 && user.rows[0].password === password) {
@@ -52,7 +56,7 @@ app.post('/login', async (req, res) => {
   }
 });
 
-// 3. Cadastrar Gasto (Igual ao anterior)
+// 3. Cadastrar Gasto
 app.post('/expenses', async (req, res) => {
   const { userId, description, category, amount, installments, date } = req.body;
   try {
@@ -67,7 +71,7 @@ app.post('/expenses', async (req, res) => {
   }
 });
 
-// 4. Pegar Gastos (Igual ao anterior)
+// 4. Pegar Gastos
 app.get('/expenses/:userId', async (req, res) => {
   const { userId } = req.params;
   const { month } = req.query; 

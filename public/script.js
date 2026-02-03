@@ -1,10 +1,8 @@
-// Deixe vazio para usar a mesma URL do site (importante para o Render)
 const API_URL = ''; 
 
 let currentUser = null;
 let myChart = null;
 
-// Funções de Autenticação
 function toggleAuth() {
     const loginDiv = document.getElementById('login-form');
     const regDiv = document.getElementById('register-form');
@@ -18,14 +16,13 @@ function toggleAuth() {
 }
 
 async function login() {
-    // MODIFICADO: Agora busca pelo ID 'login-user'
+    // Pega o USUÁRIO
     const username = document.getElementById('login-user').value;
     const password = document.getElementById('login-pass').value;
 
     const res = await fetch(`${API_URL}/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        // MODIFICADO: Envia 'username' no lugar de 'email'
         body: JSON.stringify({ username, password })
     });
 
@@ -33,8 +30,8 @@ async function login() {
         currentUser = await res.json();
         document.getElementById('auth-screen').style.display = 'none';
         document.getElementById('dashboard-screen').style.display = 'block';
+        document.getElementById('welcome-msg').innerText = `Olá, ${currentUser.username}`;
         
-        // Define mês atual por padrão
         const now = new Date();
         document.getElementById('current-month').value = now.toISOString().slice(0, 7);
         loadDashboard();
@@ -44,25 +41,26 @@ async function login() {
 }
 
 async function register() {
-    // MODIFICADO: Agora busca pelo ID 'reg-user'
+    // Pega o USUÁRIO
     const username = document.getElementById('reg-user').value;
     const pass = document.getElementById('reg-pass').value;
     const confirm = document.getElementById('reg-confirm').value;
 
+    if (!username) return alert('Digite um nome de usuário!');
     if (pass !== confirm) return alert('Senhas não conferem!');
 
     const res = await fetch(`${API_URL}/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        // MODIFICADO: Envia 'username' no lugar de 'email'
         body: JSON.stringify({ username, password: pass })
     });
 
     if (res.ok) {
-        alert('Cadastrado! Faça login com seu novo usuário.');
+        alert('Cadastrado! Faça login.');
         toggleAuth();
     } else {
-        alert('Erro ao cadastrar. Esse usuário já existe?');
+        const errorData = await res.json();
+        alert(errorData.error || 'Erro ao cadastrar.');
     }
 }
 
@@ -72,7 +70,6 @@ function logout() {
     document.getElementById('dashboard-screen').style.display = 'none';
 }
 
-// Funções do Dashboard
 async function addExpense() {
     if (!currentUser) return;
 
@@ -85,6 +82,10 @@ async function addExpense() {
         date: document.getElementById('date').value
     };
 
+    if(!data.description || !data.amount || !data.date) {
+        return alert("Preencha todos os campos do gasto!");
+    }
+
     await fetch(`${API_URL}/expenses`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -92,7 +93,10 @@ async function addExpense() {
     });
 
     alert('Gasto salvo!');
-    loadDashboard(); // Atualiza o gráfico
+    // Limpar campos
+    document.getElementById('desc').value = '';
+    document.getElementById('val').value = '';
+    loadDashboard(); 
 }
 
 async function loadDashboard() {
@@ -102,7 +106,6 @@ async function loadDashboard() {
     const res = await fetch(`${API_URL}/expenses/${currentUser.id}?month=${month}`);
     const expenses = await res.json();
 
-    // Calcular Totais por Categoria
     const categories = {};
     let total = 0;
 
@@ -122,8 +125,7 @@ async function loadDashboard() {
 
 function renderChart(dataObj) {
     const ctx = document.getElementById('expenseChart').getContext('2d');
-    
-    if (myChart) myChart.destroy(); // Destroi gráfico antigo para criar o novo
+    if (myChart) myChart.destroy();
 
     myChart = new Chart(ctx, {
         type: 'doughnut',
@@ -131,7 +133,7 @@ function renderChart(dataObj) {
             labels: Object.keys(dataObj),
             datasets: [{
                 data: Object.values(dataObj),
-                backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0']
+                backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF']
             }]
         }
     });
