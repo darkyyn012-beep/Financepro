@@ -7,43 +7,44 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
-// Serve os arquivos do site (HTML/CSS/JS)
 app.use(express.static('public'));
 
-// Pega a conexão do Render (Variável de Ambiente) ou usa uma local de teste
+// Pega a variável do Render OU usa a string local se estiver testando no PC
 const connectionString = process.env.DATABASE_URL;
 
 const pool = new Pool({
   connectionString: connectionString,
   ssl: {
-    rejectUnauthorized: false // Importante para conectar no Supabase via SSL
+    rejectUnauthorized: false
   }
 });
 
-// 1. Rota de Cadastro
+// 1. Rota de Cadastro (MODIFICADA para username)
 app.post('/register', async (req, res) => {
-  const { email, password } = req.body;
+  const { username, password } = req.body; // Recebe username
   try {
     const newUser = await pool.query(
-      'INSERT INTO users (email, password) VALUES ($1, $2) RETURNING id, email',
-      [email, password]
+      'INSERT INTO users (username, password) VALUES ($1, $2) RETURNING id, username',
+      [username, password]
     );
     res.json(newUser.rows[0]);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Erro ao cadastrar user' });
+    res.status(500).json({ error: 'Erro ao cadastrar. Usuário já existe?' });
   }
 });
 
-// 2. Rota de Login
+// 2. Rota de Login (MODIFICADA para username)
 app.post('/login', async (req, res) => {
-  const { email, password } = req.body;
+  const { username, password } = req.body; // Recebe username
   try {
-    const user = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
+    // Busca por username ao invés de email
+    const user = await pool.query('SELECT * FROM users WHERE username = $1', [username]);
+    
     if (user.rows.length > 0 && user.rows[0].password === password) {
-      res.json({ id: user.rows[0].id, email: user.rows[0].email });
+      res.json({ id: user.rows[0].id, username: user.rows[0].username });
     } else {
-      res.status(401).json({ error: 'Credenciais inválidas' });
+      res.status(401).json({ error: 'Usuário ou senha incorretos' });
     }
   } catch (err) {
     console.error(err);
@@ -51,7 +52,7 @@ app.post('/login', async (req, res) => {
   }
 });
 
-// 3. Cadastrar Gasto
+// 3. Cadastrar Gasto (Igual ao anterior)
 app.post('/expenses', async (req, res) => {
   const { userId, description, category, amount, installments, date } = req.body;
   try {
@@ -66,7 +67,7 @@ app.post('/expenses', async (req, res) => {
   }
 });
 
-// 4. Pegar Gastos
+// 4. Pegar Gastos (Igual ao anterior)
 app.get('/expenses/:userId', async (req, res) => {
   const { userId } = req.params;
   const { month } = req.query; 
