@@ -4,8 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Finance Pro</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="style.css?v=3"> <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 
@@ -14,19 +13,39 @@
         
         <div id="login-form">
             <h2>Bem-vindo de volta</h2>
-            <input type="text" id="login-user" placeholder="Usuário">
-            <input type="password" id="login-pass" placeholder="Senha">
+            
+            <div class="input-group">
+                <input type="text" id="login-user" placeholder="Usuário" oninput="clearError('login')">
+            </div>
+
+            <div class="input-group">
+                <input type="password" id="login-pass" placeholder="Senha" oninput="clearError('login')">
+            </div>
+            
+            <div id="login-error-msg" class="error-msg" style="display: none;">
+                ⚠️ Usuário ou senha incorretos.
+            </div>
+
             <button onclick="login()">Entrar</button>
-            <p onclick="toggleAuth()">Criar uma conta nova</p>
+            <p class="link" onclick="toggleAuth()">Criar uma conta nova</p>
         </div>
 
         <div id="register-form" style="display:none;">
             <h2>Criar Conta</h2>
-            <input type="text" id="reg-user" placeholder="Escolha um Usuário">
-            <input type="password" id="reg-pass" placeholder="Senha">
-            <input type="password" id="reg-confirm" placeholder="Confirme a Senha">
+            
+            <input type="text" id="reg-user" placeholder="Escolha um Usuário" oninput="clearError('reg-user')">
+            <div id="error-reg-user" class="error-msg" style="display:none;"></div>
+
+            <input type="password" id="reg-pass" placeholder="Senha (Mínimo 6 dígitos)" oninput="clearError('reg-pass')">
+            <div id="error-reg-pass" class="error-msg" style="display:none;"></div>
+
+            <input type="password" id="reg-confirm" placeholder="Confirme a Senha" oninput="clearError('reg-confirm')">
+            <div id="error-reg-confirm" class="error-msg" style="display:none;"></div>
+
+            <div id="register-global-error" class="error-msg" style="display: none;"></div>
+
             <button onclick="register()">Cadastrar</button>
-            <p onclick="toggleAuth()">Já tenho conta</p>
+            <p class="link" onclick="toggleAuth()">Já tenho conta</p>
         </div>
     </div>
 
@@ -34,7 +53,7 @@
         <div class="container">
             <nav>
                 <h2 id="welcome-msg">Finance Pro</h2>
-                <button onclick="logout()" style="width: auto; background: #e74c3c; margin:0; padding: 8px 15px; font-size: 14px;">Sair</button>
+                <button onclick="logout()" style="width: auto; background: #e74c3c; margin:0; padding: 8px 15px;">Sair</button>
             </nav>
 
             <div class="content">
@@ -50,7 +69,7 @@
 
                 <div class="add-expense">
                     <h3>+ Novo Gasto</h3>
-                    <input type="text" id="desc" placeholder="Descrição (ex: Mercado)">
+                    <input type="text" id="desc" placeholder="Descrição">
                     <div style="display: flex; gap: 10px;">
                         <select id="cat">
                             <option value="Alimentação">Alimentação</option>
@@ -59,7 +78,7 @@
                             <option value="Contas">Contas Fixas</option>
                             <option value="Outros">Outros</option>
                         </select>
-                        <input type="number" id="val" placeholder="Valor" style="margin: 8px 0;">
+                        <input type="number" id="val" placeholder="Valor">
                     </div>
                     <div style="display: flex; gap: 10px;">
                         <input type="number" id="parc" placeholder="Parcelas" value="1">
