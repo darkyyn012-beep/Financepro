@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:3000'; // Mude para URL do Render quando subir
+const API_URL = '';; // Mude para URL do Render quando subir
 let currentUser = null;
 let myChart = null;
 
