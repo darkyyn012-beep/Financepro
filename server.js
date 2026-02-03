@@ -13,7 +13,7 @@ app.use(express.static('public'));
 // COLE O LINK NOVO DO "TRANSACTION POOLER" (PORTA 6543) AQUI EMBAIXO
 // Exemplo: postgres://postgres.abcde:senha@aws-0-sa-east-1.pooler.supabase.com:6543/postgres
 // -----------------------------------------------------------------------
-const connectionString = postgresql://postgres.iattoghccbgqgipnuulb:[YOUR-PASSWORD]@aws-1-sa-east-1.pooler.supabase.com:6543/postgres;
+const connectionString = postgresql://postgres.iattoghccbgqgipnuulb:[Dkzin@#2002!]@aws-1-sa-east-1.pooler.supabase.com:6543/postgres;
 
 const pool = new Pool({
   connectionString: connectionString,
