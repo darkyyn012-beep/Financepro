@@ -9,17 +9,17 @@ app.use(bodyParser.json());
 
 app.use(express.static('public'));
 
-// Pega a variável do Render OU usa a string local
-const connectionString = process.env.DATABASE_URL;
+// COLE SUA CONNECTION STRING DO SUPABASE AQUI EMBAIXO
+const connectionString = 'postgres://postgres:[SUA-SENHA]@db.iattoghccbgqgipnuulb.supabase.co:5432/postgres';
 
 const pool = new Pool({
   connectionString: connectionString,
   ssl: {
-    rejectUnauthorized: false
+    rejectUnauthorized: false // Importante para conectar no Supabase via SSL
   }
 });
 
-// 1. Rota de Cadastro (AGORA COM USERNAME)
+// 1. Rota de Cadastro (COM USERNAME)
 app.post('/register', async (req, res) => {
   const { username, password } = req.body;
   
@@ -39,7 +39,7 @@ app.post('/register', async (req, res) => {
   }
 });
 
-// 2. Rota de Login (AGORA COM USERNAME)
+// 2. Rota de Login (COM USERNAME)
 app.post('/login', async (req, res) => {
   const { username, password } = req.body;
   try {
