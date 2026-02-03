@@ -9,62 +9,64 @@
 </head>
 <body>
 
-    <div id="auth-screen">
-        <div class="container">
-            <h1>Finance Pro</h1>
-            
-            <div id="login-form">
-                <h2>Login</h2>
-                <input type="text" id="login-user" placeholder="Nome de Usuário">
-                <input type="password" id="login-pass" placeholder="Senha">
-                <button onclick="login()">Entrar</button>
-                <p onclick="toggleAuth()">Não tem conta? Cadastre-se</p>
-            </div>
+    <div id="auth-screen" class="container">
+        <h1>Finance Pro 💰</h1>
+        
+        <div id="login-form">
+            <h2>Bem-vindo de volta</h2>
+            <input type="text" id="login-user" placeholder="Usuário">
+            <input type="password" id="login-pass" placeholder="Senha">
+            <button onclick="login()">Entrar</button>
+            <p onclick="toggleAuth()">Criar uma conta nova</p>
+        </div>
 
-            <div id="register-form" style="display:none;">
-                <h2>Cadastro</h2>
-                <input type="text" id="reg-user" placeholder="Crie seu Usuário">
-                <input type="password" id="reg-pass" placeholder="Senha">
-                <input type="password" id="reg-confirm" placeholder="Confirme a Senha">
-                <button onclick="register()">Cadastrar</button>
-                <p onclick="toggleAuth()">Já tem conta? Faça Login</p>
-            </div>
+        <div id="register-form" style="display:none;">
+            <h2>Criar Conta</h2>
+            <input type="text" id="reg-user" placeholder="Escolha um Usuário">
+            <input type="password" id="reg-pass" placeholder="Senha">
+            <input type="password" id="reg-confirm" placeholder="Confirme a Senha">
+            <button onclick="register()">Cadastrar</button>
+            <p onclick="toggleAuth()">Já tenho conta</p>
         </div>
     </div>
 
     <div id="dashboard-screen" style="display:none;">
-        <nav>
-            <h2 id="welcome-msg">Finance Pro</h2>
-            <button onclick="logout()" style="background:red;">Sair</button>
-        </nav>
+        <div class="container">
+            <nav>
+                <h2 id="welcome-msg">Finance Pro</h2>
+                <button onclick="logout()" style="width: auto; background: #e74c3c; margin:0; padding: 8px 15px; font-size: 14px;">Sair</button>
+            </nav>
 
-        <div class="content">
-            <div class="controls">
-                <label>Mês de Referência:</label>
-                <input type="month" id="current-month" onchange="loadDashboard()">
-            </div>
+            <div class="content">
+                <div class="controls">
+                    <label>Mês:</label>
+                    <input type="month" id="current-month" onchange="loadDashboard()">
+                </div>
 
-            <div class="chart-container">
-                <canvas id="expenseChart"></canvas>
-                <h3 id="total-display">Total: R$ 0,00</h3>
-            </div>
+                <div class="chart-container">
+                    <canvas id="expenseChart"></canvas>
+                    <h3 id="total-display" style="margin-top: 10px; color: #1e3c72;">Total: R$ 0,00</h3>
+                </div>
 
-            <hr>
-
-            <div class="add-expense">
-                <h3>Adicionar Novo Gasto</h3>
-                <input type="text" id="desc" placeholder="Descrição (ex: Mercado)">
-                <select id="cat">
-                    <option value="Alimentação">Alimentação</option>
-                    <option value="Transporte">Transporte</option>
-                    <option value="Lazer">Lazer</option>
-                    <option value="Contas">Contas Fixas</option>
-                    <option value="Outros">Outros</option>
-                </select>
-                <input type="number" id="val" placeholder="Valor (R$)">
-                <input type="number" id="parc" placeholder="Parcelas" value="1">
-                <input type="date" id="date">
-                <button onclick="addExpense()">Gravar Gasto</button>
+                <div class="add-expense">
+                    <h3>+ Novo Gasto</h3>
+                    <input type="text" id="desc" placeholder="Descrição (ex: Mercado)">
+                    <div style="display: flex; gap: 10px;">
+                        <select id="cat">
+                            <option value="Alimentação">Alimentação</option>
+                            <option value="Transporte">Transporte</option>
+                            <option value="Lazer">Lazer</option>
+                            <option value="Contas">Contas Fixas</option>
+                            <option value="Outros">Outros</option>
+                        </select>
+                        <input type="number" id="val" placeholder="Valor" style="margin: 8px 0;">
+                    </div>
+                    <div style="display: flex; gap: 10px;">
+                        <input type="number" id="parc" placeholder="Parcelas" value="1">
+                        <input type="date" id="date">
+                    </div>
+                    <button onclick="addExpense()">Salvar</button>
+                </div>
             </div>
         </div>
     </div>
